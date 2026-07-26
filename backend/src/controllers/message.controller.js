@@ -74,33 +74,42 @@ router.post('/send/:id', async (req, res) => {
     const { id: receiverId } = req.params;
 
     const senderId = req.user._id;
-    if (!text && !image)
-      return res.status(400).json({ message: "Message can't be empty" });
-    if (senderId.equals(receiverId))
+
+    if (!text && !image) {
+      return res.status(400).json({ message: 'Message can\'t be empty' });
+    }
+
+    if (senderId.equals(receiverId)) {
       return res
         .status(400)
-        .json({ message: "You can't send message to yourself" });
+        .json({ message: 'You can\'t send message to yourself' });
+    }
 
     const recervisExist = await Users.exists({ _id: receiverId });
-    if (!recervisExist)
+    if (!recervisExist) {
       return res.status(404).json({ message: 'Receiver not found' });
+    }
 
     let imageUrl;
     if (image) {
       const uploadedImage = await cloudinary.uploader.upload(image);
       imageUrl = uploadedImage.secure_url;
     }
+
     const newMessage = new Messages({
       senderId,
       receiverId,
       text,
       image: imageUrl,
     });
+
     await newMessage.save();
+
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
       io.to(receiverSocketId).emit('newMessage', newMessage);
     }
+
     res.status(201).json(newMessage);
   } catch (error) {
     console.log(error);
