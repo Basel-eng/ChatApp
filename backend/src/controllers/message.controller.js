@@ -7,9 +7,7 @@ import mongoose from 'mongoose';
 import cloudinary from '../lib/cloudinary.js';
 
 const router = express.Router();
-
 router.use(protectRoute);
-
 router.get('/contacts', async (req, res) => {
   try {
     const LoggedIn = req.user._id;
