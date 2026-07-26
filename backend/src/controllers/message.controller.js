@@ -31,7 +31,7 @@ router.get('/chats', async (req, res) => {
 
     const chatpartnerIds = [
       ...new Set(
-        messages.map(msg =>
+        messages.map((msg) =>
           msg.senderId.toString() === LoggedIn.toString()
             ? msg.receiverId.toString()
             : msg.senderId.toString()
@@ -76,13 +76,13 @@ router.post('/send/:id', async (req, res) => {
     const senderId = req.user._id;
 
     if (!text && !image) {
-      return res.status(400).json({ message: 'Message can\'t be empty' });
+      return res.status(400).json({ message: "Message can't be empty" });
     }
 
     if (senderId.equals(receiverId)) {
       return res
         .status(400)
-        .json({ message: 'You can\'t send message to yourself' });
+        .json({ message: "You can't send message to yourself" });
     }
 
     const recervisExist = await Users.exists({ _id: receiverId });

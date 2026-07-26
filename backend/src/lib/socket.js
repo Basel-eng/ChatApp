@@ -27,7 +27,7 @@ export function getReceiverSocketId(userId) {
 // this is for storig online users
 const userSocketMap = {}; // {userId:socketId}
 
-io.on('connection', socket => {
+io.on('connection', (socket) => {
   console.log('A user connected', socket.user.fullName);
 
   const userId = socket.user._id;
