@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const userSchema = mongoose.Schema({
   fullName: {
@@ -19,10 +19,10 @@ const userSchema = mongoose.Schema({
     max: 100,
     required: true,
   },
-  profilePic:{
-    type:String
-  }
+  profilePic: {
+    type: String,
+  },
 });
 
-const Users = mongoose.model("users", userSchema);
+const Users = mongoose.model('users', userSchema);
 export default Users;
