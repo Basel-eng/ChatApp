@@ -17,23 +17,28 @@ function ChatContainer() {
   } = useChatStore();
 
   const { authUser } = useAuthStore();
-
-  // ✅ حل never
   const messageEndRef = useRef<HTMLDivElement | null>(null);
 
-  // ✅ حماية null كاملة
-  if (!selectedUser || !authUser) return null;
-
   useEffect(() => {
-    getMessagesByUserId(selectedUser._id);
-    subscribeToMessages();
+    if (selectedUser?._id) {
+      getMessagesByUserId(selectedUser._id);
+      subscribeToMessages();
 
-    return () => unsubscribeFromMessages();
-  }, [selectedUser._id]);
+      return () => unsubscribeFromMessages();
+    }
+  }, [
+    selectedUser?._id,
+    getMessagesByUserId,
+    subscribeToMessages,
+    unsubscribeFromMessages,
+  ]);
 
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // ✅ 2. Early return بعد كل الـ Hooks
+  if (!selectedUser || !authUser) return null;
 
   return (
     <>
@@ -76,7 +81,6 @@ function ChatContainer() {
               </div>
             ))}
 
-            {/* Scroll target */}
             <div ref={messageEndRef} />
           </div>
         ) : isMessagesLoading ? (

@@ -27,7 +27,7 @@ function MessageInput() {
 
     sendMessage({
       text: text.trim(),
-      image: imagePreview || undefined, // ✅ حل مشكلة null
+      image: imagePreview || undefined,
     });
 
     setText("");
@@ -95,7 +95,10 @@ function MessageInput() {
           value={text}
           onChange={(e) => {
             setText(e.target.value);
-            isSoundEnabled && playRandomKeyStrokeSound();
+            // ✅ صح: if statement بدل &&
+            if (isSoundEnabled) {
+              playRandomKeyStrokeSound();
+            }
           }}
           className="flex-1 bg-slate-800/50 border border-slate-700/50 rounded-lg py-2 px-4"
           placeholder="Type your message..."
@@ -111,7 +114,7 @@ function MessageInput() {
 
         <button
           type="button"
-          onClick={() => fileInputRef.current?.click()} // ✅ solved never
+          onClick={() => fileInputRef.current?.click()}
           className={`bg-slate-800/50 text-slate-400 hover:text-slate-200 rounded-lg px-4 transition-colors ${
             imagePreview ? "text-cyan-500" : ""
           }`}

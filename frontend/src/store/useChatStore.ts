@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
+import { AxiosError } from "axios"; // ← استيراد جديد
 import toast from "react-hot-toast";
 import { useAuthStore } from "./useAuthStore";
 
@@ -55,6 +56,17 @@ interface ChatState {
 }
 
 /* =========================
+   Helper
+========================= */
+
+const getErrorMessage = (error: unknown): string => {
+  if (error instanceof AxiosError) {
+    return error.response?.data?.message || "Something went wrong";
+  }
+  return "Something went wrong";
+};
+
+/* =========================
    Store
 ========================= */
 
@@ -107,8 +119,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
     try {
       const res = await axiosInstance.get<User[]>("/messages/chats");
       set({ chats: res.data });
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Something went wrong");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     } finally {
       set({ isUsersLoading: false });
     }
@@ -123,8 +135,8 @@ export const useChatStore = create<ChatState>((set, get) => ({
     try {
       const res = await axiosInstance.get<Message[]>(`/messages/${userId}`);
       set({ messages: res.data });
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Something went wrong");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
     } finally {
       set({ isMessagesLoading: false });
     }
@@ -167,12 +179,12 @@ export const useChatStore = create<ChatState>((set, get) => ({
           msg._id === tempId ? res.data : msg,
         ),
       }));
-    } catch (error: any) {
+    } catch (error) {
       set((state) => ({
         messages: state.messages.filter((msg) => msg._id !== tempId),
       }));
 
-      toast.error(error?.response?.data?.message || "Something went wrong");
+      toast.error(getErrorMessage(error));
     }
   },
 

@@ -11,7 +11,7 @@ function ChatsList() {
 
   useEffect(() => {
     getMyChatPartners();
-  }, []); 
+  }, [getMyChatPartners]);
 
   if (isUsersLoading) return <UsersLoadingSkeleton />;
   if (!chats || chats.length === 0) return <NoChatsFound />;

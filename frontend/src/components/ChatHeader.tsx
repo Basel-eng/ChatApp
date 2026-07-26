@@ -7,10 +7,6 @@ function ChatHeader() {
   const { selectedUser, setSelectedUser } = useChatStore();
   const { onlineUsers } = useAuthStore();
 
-  if (!selectedUser) return null;
-
-  const isOnline = onlineUsers?.includes(selectedUser._id);
-
   useEffect(() => {
     const handleEscKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -22,10 +18,14 @@ function ChatHeader() {
     return () => window.removeEventListener("keydown", handleEscKey);
   }, [setSelectedUser]);
 
+  // ✅ 2. Early return بعد كل الـ Hooks
+  if (!selectedUser) return null;
+
+  const isOnline = onlineUsers?.includes(selectedUser._id);
+
   return (
     <div className="flex justify-between items-center bg-slate-800/50 border-b border-slate-700/50 max-h-[84px] px-6 flex-1">
       <div className="flex items-center space-x-3">
-        {/* Avatar with green dot */}
         <div className="relative">
           <img
             src={selectedUser.profilePic || "/avatar.png"}
