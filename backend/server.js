@@ -40,7 +40,7 @@ app.use(
     credentials: true,
   })
 );
-app.use('/api/auth', authLimiter, authRoute);
+app.use('/api/auth', authRoute);
 app.use('/api/messages', messageRoute);
 
 if (process.env.NODE_ENV === 'production') {
